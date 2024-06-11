@@ -82,3 +82,87 @@ void tampilkanMenu(bool sudahDaftar, bool sudahLogin) {
     cout << "====================\n";
     cout << "Masukkan pilihan Anda: ";
 }
+void lihatKatalog(vector<Kue>& katalog) {
+    system("clear");
+    cout << "Katalog Kue:" << endl;
+    for (auto& kue : katalog) {
+        kue.tampilkanDeskripsi();
+    }
+    cin.ignore(); 
+    cin.get();   
+}
+
+Pengguna* loginPengguna(vector<Pengguna>& pengguna) {
+    string username, password;
+    cout << "Masukkan username: ";
+    cin >> username;
+    cout << "Masukkan password: ";
+    cin >> password;
+
+    for (auto& pengguna : pengguna) {
+        if (pengguna.getUsername() == username && pengguna.getPassword() == password) {
+            cout << "Login berhasil!" << endl;
+            return &pengguna;
+        }
+    }
+
+    cout << "Username atau password Salah. Silakan coba lagi." << endl;
+    return nullptr;
+}
+
+void tampilkanKatalog(vector<Kue>& katalog) {
+    cout << "Menu Kue:" << endl;
+    for (auto& kue : katalog) {
+        kue.tampilkanDeskripsi();
+    }
+}
+
+void pesanKue(Pengguna* pengguna, vector<Kue>& katalog, stack<Kue>& tumpukanPesan) {
+    if (pengguna == nullptr) {
+        cout << "Silakan login terlebih dahulu!" << endl;
+        return;
+    }
+
+    tampilkanKatalog(katalog);
+
+    string rasa, ukuran;
+    cout << "Masukkan kue: ";
+    cin >> rasa;
+
+  
+    auto it = find_if(katalog.begin(), katalog.end(), [&rasa](Kue& kue) {
+        return kue.getRasa() == rasa;
+    });
+
+    if (it != katalog.end()) {
+        cout << "Masukkan ukuran kue Tersedia ( ";
+        for (const auto& u : it->getUkuranTersedia()) {
+            cout << u << " ";
+        }
+        cout << "): ";
+        cin >> ukuran;
+
+        if (it->ukuranValid(ukuran)) {
+            Kue kueDipilih = *it;
+            kueDipilih.setUkuran(ukuran);
+            tumpukanPesan.push(kueDipilih);
+            cout << "Pemesanan berhasil!" << endl;
+        } else {
+            cout << "Ukuran tidak tersedia. Pemesanan gagal." << endl;
+        }
+    } else {
+        cout << "Kue tersebut tidak ditemukan. Pemesanan gagal." << endl;
+        
+    }
+    cin.ignore(); 
+    cin.get();   
+}
+
+void tampilkanStruk(stack<Kue>& tumpukanPesan) {
+    cout << "Struk Pembelian:" << endl;
+    while (!tumpukanPesan.empty()) {
+        tumpukanPesan.top().tampilkan();
+        tumpukanPesan.pop();
+    }
+}
+
