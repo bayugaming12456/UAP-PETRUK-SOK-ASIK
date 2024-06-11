@@ -166,3 +166,92 @@ void tampilkanStruk(stack<Kue>& tumpukanPesan) {
     }
 }
 
+int main() {
+    vector<Pengguna> pengguna;
+    vector<Kue> katalog = {
+        Kue("Donat",{",Besar""/","Kecil"},",Pilihan tepat buat yang gamon.\n", 55000),
+        Kue("Muffin",{",Besar""/","Kecil"},",Pilihan sempurna untuk menemani waktu santai.\n", 60000),
+        Kue("Cheese Cake",{",Besar""/","Kecil"},",Pilihan tepat untuk menemani hari yang indah\n", 70000)
+    };
+    stack<Kue> tumpukanPesan;
+
+    int pilihan;
+    Pengguna* penggunaSaatIni = nullptr;
+    bool sudahDaftar = false;
+    bool sudahLogin = false;
+    
+    initscr();
+    noecho();
+    cbreak();
+    int max_y, max_x;
+    getmaxyx(stdscr, max_y, max_x);
+
+   
+    mvprintw((max_y - 3) / 2, (max_x - 30) / 2, "====================================");
+    mvprintw((max_y - 1) / 2, (max_x - 30) / 2, "| Selamat datang di Hammer Bakery! |");
+    mvprintw((max_y + 1) / 2, (max_x - 30) / 2, "====================================");
+    refresh();
+    getch();
+    endwin();
+
+
+    do {
+        tampilkanMenu(sudahDaftar,sudahLogin);
+        cin >> pilihan;
+
+        switch (pilihan) {
+            case 1:
+                if (!sudahDaftar) {
+                    daftarPengguna(pengguna);
+                    sudahDaftar = true;
+                    system("clear");
+                } else {
+                    cout << "Anda sudah terdaftar!\n";
+                }
+                break;
+            case 2:
+                if (!sudahLogin) {
+                    penggunaSaatIni = loginPengguna(pengguna);
+                    if (penggunaSaatIni != nullptr) {
+                        sudahLogin = true;
+                        system("clear");
+                    }
+                } else {
+                    cout << "Anda sudah login!\n";
+                }
+                break;
+            case 3:
+                lihatKatalog(katalog);
+                system("clear");
+                break;
+            case 4:
+                pesanKue(penggunaSaatIni, katalog, tumpukanPesan);
+                break;
+            case 5:
+                tampilkanStruk(tumpukanPesan);
+                break;
+            case 6:
+                penggunaSaatIni = nullptr;
+                cout << "Berhasil logout!" << endl;
+                break;
+            case 0:
+                cout << "Terimakasih, Semoga Hari-harimu NT terus" << endl;
+                break;
+            default:
+                cout << "Pilihan tidak ada\n" << endl;
+        }
+    } while (pilihan != 0);
+    initscr();
+    noecho();
+    cbreak();
+    
+    mvprintw((max_y - 3) / 2, (max_x - 30) / 2, "=================================================");
+    mvprintw((max_y - 1) / 2, (max_x - 30) / 2, "|   Terima Kasih, Semoga Hari-harimu NT Terus   |");
+    mvprintw((max_y + 1) / 2, (max_x - 30) / 2, "=================================================");
+    refresh();
+    getch();
+    endwin();
+
+
+return 0;
+}
